@@ -329,7 +329,7 @@ body::before {
   width: min(96vw, 1500px);
   height: min(94vh, 980px);
   isolation: isolate;
-  padding: 0;
+  padding: 0 0 1.1rem;
   transform: scale(0.88) translateY(32px) rotateX(6deg);
   opacity: 0;
   animation: enterPanel 0.9s cubic-bezier(0.2, 0.9, 0.2, 1.06) forwards;
@@ -345,8 +345,8 @@ body::before {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: min(90vw, 1320px);
-  height: min(86vh, 920px);
+  width: min(54vw, 780px);
+  height: min(56vh, 560px);
   object-fit: contain;
   object-position: center;
   border: 0;
@@ -359,50 +359,53 @@ body::before {
 
 .entry-overlay__popup--1 {
   z-index: 1;
-  transform: translate(-52%, -50%) rotate(-9deg);
+  transform: translate(-118%, -76%) rotate(-12deg);
   opacity: 0.52;
   animation-delay: -0.63s;
 }
 
 .entry-overlay__popup--2 {
   z-index: 2;
-  transform: translate(-48%, -52%) rotate(7deg);
+  transform: translate(8%, -82%) rotate(10deg);
   opacity: 0.58;
   animation-delay: -0.35s;
 }
 
 .entry-overlay__popup--3 {
   z-index: 3;
-  transform: translate(-50%, -49%) rotate(-4deg);
+  transform: translate(-126%, -10%) rotate(-6deg);
   opacity: 0.62;
   animation-delay: -0.15s;
 }
 
 .entry-overlay__popup--4 {
   z-index: 4;
-  transform: translate(-50%, -51%) rotate(5deg);
+  transform: translate(20%, -18%) rotate(7deg);
   opacity: 0.68;
   animation-delay: -0.54s;
 }
 
 .entry-overlay__popup--5 {
   z-index: 5;
-  transform: translate(-50.5%, -50.5%) rotate(-2deg);
-  opacity: 0.74;
+  transform: translate(-58%, -58%) rotate(-2deg);
+  opacity: 0.78;
   animation-delay: -0.82s;
 }
 
 .entry-overlay__popup--6 {
   z-index: 6;
-  transform: translate(-49.5%, -50%) rotate(2deg);
+  transform: translate(-38%, -44%) rotate(3deg);
   opacity: 0.96;
   animation-delay: -0.25s;
 }
 
 .entry-overlay__actions {
-  width: min(92vw, 460px);
-  margin-top: auto;
-  margin-bottom: 0.8rem;
+  position: absolute;
+  left: 50%;
+  bottom: clamp(0.75rem, 2.5vh, 1.8rem);
+  transform: translateX(-50%);
+  width: min(84vw, 420px);
+  margin: 0;
   z-index: 9;
 }
 
@@ -555,6 +558,52 @@ body::before {
   78% {
     transform: translateY(1px) translateX(-1px);
     filter: saturate(0.85) contrast(1.25);
+  }
+}
+
+@media (max-width: 900px) {
+  .entry-overlay__panel {
+    width: min(96vw, 700px);
+    height: min(92vh, 740px);
+  }
+
+  .entry-overlay__popup {
+    width: min(62vw, 330px);
+    height: min(38vh, 260px);
+  }
+
+  .entry-overlay__popup--1 {
+    transform: translate(-92%, -86%) rotate(-10deg);
+  }
+
+  .entry-overlay__popup--2 {
+    transform: translate(-14%, -90%) rotate(8deg);
+  }
+
+  .entry-overlay__popup--3 {
+    transform: translate(-94%, -28%) rotate(-5deg);
+  }
+
+  .entry-overlay__popup--4 {
+    transform: translate(-10%, -26%) rotate(6deg);
+  }
+
+  .entry-overlay__popup--5 {
+    transform: translate(-58%, -55%) rotate(-2deg);
+  }
+
+  .entry-overlay__popup--6 {
+    transform: translate(-44%, -50%) rotate(2deg);
+  }
+
+  .entry-overlay__actions {
+    width: min(88vw, 360px);
+    bottom: 0.85rem;
+  }
+
+  .entry-overlay__button {
+    font-size: 1.05rem;
+    padding: 0.6rem 0.9rem;
   }
 }
 
