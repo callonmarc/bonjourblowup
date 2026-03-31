@@ -16,7 +16,15 @@ if (menuToggle && siteNav) {
 // =========================================
 const entryOverlay = document.getElementById('entryOverlay');
 const entryOverlayButton = document.getElementById('entryOverlayButton');
+const heroEnterShopLink = document.querySelector('.hero .btn.btn--solid[href="shop.html"]');
+const shopPreviewAudio = document.getElementById('shopPreviewAudio');
 const onHomePage = document.body.classList.contains('home-page');
+const SHOP_URL = 'shop.html';
+const SHOP_TRANSITION_MS = 740;
+const MIN_AUDIO_PLAY_MS = 280;
+const AUDIO_FADE_IN_MS = 160;
+const AUDIO_FADE_OUT_MS = 220;
+let isShopNavigationInProgress = false;
 
 function closeEntryOverlay() {
   if (!entryOverlay) return;
@@ -39,12 +47,94 @@ function closeEntryOverlay() {
   window.setTimeout(finalizeOverlayClose, 900);
 }
 
+function fadeAudioVolume(audio, target, duration) {
+  if (!audio || !Number.isFinite(duration) || duration <= 0) {
+    if (audio) audio.volume = Math.max(0, Math.min(1, target));
+    return Promise.resolve();
+  }
+
+  return new Promise((resolve) => {
+    const start = performance.now();
+    const initial = Number.isFinite(audio.volume) ? audio.volume : 1;
+    const clampedTarget = Math.max(0, Math.min(1, target));
+
+    const step = (now) => {
+      const progress = Math.min(1, (now - start) / duration);
+      audio.volume = initial + (clampedTarget - initial) * progress;
+      if (progress < 1) {
+        window.requestAnimationFrame(step);
+      } else {
+        resolve();
+      }
+    };
+
+    window.requestAnimationFrame(step);
+  });
+}
+
+async function playShopPreviewSnippet() {
+  if (!shopPreviewAudio) return false;
+
+  shopPreviewAudio.muted = false;
+  shopPreviewAudio.volume = 0.01;
+  shopPreviewAudio.currentTime = 0;
+  const playStart = performance.now();
+
+  try {
+    await shopPreviewAudio.play();
+    await fadeAudioVolume(shopPreviewAudio, 0.82, AUDIO_FADE_IN_MS);
+    return playStart;
+  } catch (error) {
+    console.warn('Shop preview audio playback failed. Continuing to shop.', error);
+    return false;
+  }
+}
+
+async function stopShopPreviewSnippet(playStartedAt) {
+  if (!shopPreviewAudio || shopPreviewAudio.paused) return;
+
+  const elapsed = performance.now() - playStartedAt;
+  if (elapsed < MIN_AUDIO_PLAY_MS) {
+    await new Promise((resolve) => window.setTimeout(resolve, MIN_AUDIO_PLAY_MS - elapsed));
+  }
+
+  await fadeAudioVolume(shopPreviewAudio, 0, AUDIO_FADE_OUT_MS);
+  shopPreviewAudio.pause();
+  shopPreviewAudio.currentTime = 0;
+}
+
+async function transitionToShop(event) {
+  event?.preventDefault();
+
+  if (isShopNavigationInProgress) return;
+  isShopNavigationInProgress = true;
+  entryOverlayButton?.setAttribute('disabled', 'true');
+  heroEnterShopLink?.setAttribute('aria-disabled', 'true');
+  document.body.classList.add('shop-audio-active');
+
+  const audioStartTime = await playShopPreviewSnippet();
+  if (entryOverlay && !entryOverlay.classList.contains('is-hidden')) {
+    closeEntryOverlay();
+  }
+
+  window.setTimeout(async () => {
+    if (typeof audioStartTime === 'number') {
+      await stopShopPreviewSnippet(audioStartTime);
+    }
+    window.location.href = SHOP_URL;
+  }, SHOP_TRANSITION_MS);
+}
+
 if (onHomePage && entryOverlay && entryOverlayButton) {
   entryOverlay.classList.remove('is-hidden');
   entryOverlay.setAttribute('aria-hidden', 'false');
   document.body.classList.add('overlay-open', 'pre-entry');
 
-  entryOverlayButton.addEventListener('click', closeEntryOverlay);
+  entryOverlayButton.addEventListener('click', transitionToShop);
+}
+
+if (onHomePage && heroEnterShopLink) {
+  heroEnterShopLink.addEventListener('click', transitionToShop);
 }
 
 // =========================================
