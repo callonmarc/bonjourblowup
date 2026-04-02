@@ -354,10 +354,11 @@ body .grit-overlay--scratches {
   transform: skewX(-4deg) rotate(-0.8deg);
   text-shadow:
     2px 2px 0 rgba(0, 0, 0, 0.95),
-    -3px 2px 0 rgba(186, 31, 52, 0.62),
-    3px -1px 0 rgba(11, 31, 121, 0.6),
-    0 8px 24px rgba(0, 0, 0, 0.8);
-  animation: titleFlicker 3s steps(2, end) infinite;
+    -5px 2px 0 rgba(186, 31, 52, 0.62),
+    5px -2px 0 rgba(11, 31, 121, 0.6),
+    0 0 20px rgba(246, 240, 232, 0.22),
+    0 10px 28px rgba(0, 0, 0, 0.82);
+  animation: titleFlicker 8.5s steps(2, end) infinite;
   will-change: filter, transform;
 }
 
@@ -372,16 +373,25 @@ body .grit-overlay--scratches {
 }
 
 .hero-title::before {
+  --layer-x: 8px;
+  --layer-y: 3px;
+  --layer-r: 0.8deg;
+  --layer-skew: -8deg;
   color: rgba(186, 31, 52, 0.68);
-  transform: translate(6px, 2px) skewX(-8deg) rotate(0.8deg);
+  transform: translate(var(--layer-x), var(--layer-y)) skewX(var(--layer-skew, 0deg)) rotate(var(--layer-r));
   filter: blur(1.4px);
   mix-blend-mode: screen;
+  animation: titleLayerGlitch 12s steps(1, end) infinite;
 }
 
 .hero-title::after {
+  --layer-x: -8px;
+  --layer-y: -4px;
+  --layer-r: -1.2deg;
   color: rgba(55, 124, 255, 0.72);
-  transform: translate(-5px, -3px) rotate(-1.2deg);
+  transform: translate(var(--layer-x), var(--layer-y)) rotate(var(--layer-r));
   opacity: 0.86;
+  animation: titleLayerGlitch 12s steps(1, end) infinite reverse;
 }
 
 .hero-title__layer {
@@ -448,12 +458,12 @@ body .grit-overlay--scratches {
 
 @keyframes titleFlicker {
   0%, 100% { opacity: 1; filter: saturate(1.05) contrast(1.1); }
-  8% { opacity: 0.93; }
-  12% { opacity: 1; transform: skewX(-5deg) rotate(-0.85deg); }
-  33% { filter: saturate(1.24) contrast(1.2); }
-  34% { opacity: 0.88; }
-  35% { opacity: 1; }
-  61% { filter: saturate(1.15) contrast(1.18); }
+  68% { opacity: 1; filter: saturate(1.08) contrast(1.12); }
+  69% { opacity: 0.96; filter: saturate(1.13) contrast(1.16); }
+  70% { opacity: 1; }
+  91% { filter: saturate(1.14) contrast(1.17); }
+  92% { opacity: 0.95; transform: skewX(-4.5deg) rotate(-0.85deg); }
+  93% { opacity: 1; transform: skewX(-4deg) rotate(-0.8deg); }
 }
 
 @keyframes titleGhostShift {
@@ -461,6 +471,12 @@ body .grit-overlay--scratches {
   22% { transform: translate(5px, -3px) rotate(0.8deg); opacity: 0.35; }
   23% { transform: translate(2px, -5px) rotate(-0.3deg); opacity: 0.5; }
   74% { transform: translate(4px, -2px) rotate(0.6deg); opacity: 0.38; }
+}
+
+@keyframes titleLayerGlitch {
+  0%, 96%, 100% { transform: translate(var(--layer-x, 0), var(--layer-y, 0)) skewX(var(--layer-skew, 0deg)) rotate(var(--layer-r, 0deg)); }
+  97% { transform: translate(calc(var(--layer-x, 0) + 1px), calc(var(--layer-y, 0) - 1px)) skewX(var(--layer-skew, 0deg)) rotate(calc(var(--layer-r, 0deg) + 0.3deg)); }
+  98% { transform: translate(calc(var(--layer-x, 0) - 1px), calc(var(--layer-y, 0) + 1px)) skewX(var(--layer-skew, 0deg)) rotate(calc(var(--layer-r, 0deg) - 0.2deg)); }
 }
 
 /* =========================================
